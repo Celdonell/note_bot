@@ -129,7 +129,14 @@ async def cb_takelistshowed(callback: CallbackQuery):
     result = callback.data.split('_')[1]
     if result == 'back':
         await callback.answer('Вы выбрали: Назад')
-        await callback.message.edit_text('Выберите список дел', reply_markup=await kb.get_takelists_by_id(callback.from_user.id))
+        data = await select_takelist_by_id(callback.from_user.id)
+        string = ''
+        for item in data:
+            string += item.name
+        if string == '':
+            await callback.message.edit_text('У вас нет списков дел. Нажмите \'Создать➕\' чтобы создать новый список')
+        else:
+            await callback.message.edit_text('Выберите список дел', reply_markup=await kb.get_takelists_by_id(callback.from_user.id))
     elif result.startswith('edit'):
         await callback.answer('Вы выбрали: Отметить сделанное')
         name_by_cb = result.split('-')[1]
@@ -145,7 +152,14 @@ async def cb_timetableshowed(callback: CallbackQuery):
     result = callback.data.split('_')[1]
     if result == 'back':
         await callback.answer('Вы выбрали: Назад')
-        await callback.message.edit_text('Выберите расписание', reply_markup=await kb.get_timetables_by_id(callback.from_user.id))
+        data = await select_timetable_by_id(callback.from_user.id)
+        string = ''
+        for item in data:
+            string += item.name
+        if string == '':
+            await callback.message.edit_text('У вас нет расписаний. Нажмите \'Создать➕\' чтобы создать новое расписание')
+        else:
+            await callback.message.edit_text('Выберите расписание', reply_markup=await kb.get_timetables_by_id(callback.from_user.id))
     elif result.startswith('delete'):
         await callback.answer('Вы выбрали: Удалить')
         name_by_cb = result.split('-')[1]
@@ -157,7 +171,14 @@ async def cb_eventshown(callback: CallbackQuery):
     result = callback.data.split('_')[1]
     if result == 'back':
         await callback.answer('Вы выбрали: Назад')
-        await callback.message.edit_text('Выберите мероприятие', reply_markup=await kb.get_events_by_id(callback.from_user.id))
+        data = await select_event_by_id(callback.from_user.id)
+        string = ''
+        for item in data:
+            string += item.name
+        if string == '':
+            await callback.message.edit_text('У вас нет мероприятий. Нажмите \'Создать➕\' чтобы создать новое мероприятие')
+        else:
+            await callback.message.edit_text('Выберите мероприятие', reply_markup=await kb.get_events_by_id(callback.from_user.id))
     elif result.startswith('delete'):
         await callback.answer('Вы выбрали: Удалить')
         name_by_cb = result.split('-')[1]
@@ -169,13 +190,19 @@ async def cb_noteshown(callback: CallbackQuery):
     result = callback.data.split('_')[1]
     if result == 'back':
         await callback.answer('Вы выбрали: Назад')
-        await callback.message.edit_text('Выберите заметку', reply_markup=await kb.get_notes_by_id(callback.from_user.id))
+        data = await select_note_by_id(callback.from_user.id)
+        string = ''
+        for item in data:
+            string += item.name
+        if string == '':
+            await callback.message.edit_text('У вас нет заметок. Нажмите \'Создать➕\' чтобы создать новую заметку')
+        else:
+            await callback.message.edit_text('Выберите заметку', reply_markup=await kb.get_notes_by_id(callback.from_user.id))
     elif result.startswith('delete'):
         await callback.answer('Вы выбрали: Удалить')
         name_by_cb = result.split('-')[1]
         await delete_note_by_id_and_name(callback.from_user.id, name_by_cb)
         await callback.message.edit_text('Заметка успешно удалена', reply_markup=await kb.create_inline_keyboard(['Назад к заметкам-back'], 'noteshown'))
 
-    
             
 
